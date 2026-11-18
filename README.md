@@ -1,8 +1,35 @@
 # local-first-notes
 
-Incident notes that keep working offline and merge everyone's edits without conflicts. Each incident is a [Yjs](https://yjs.dev) document: a set of CRDTs (conflict-free replicated data types) that every responder's browser holds a full copy of.
+Incident notes that keep working offline and merge everyone's edits without conflicts. Each incident is a [Yjs](https://yjs.dev) document, a set of CRDTs (conflict-free replicated data types): every responder's browser holds the whole incident, edits it without waiting for the network, and syncs whenever it can.
 
-Status: built step by step, locally. Not published.
+TypeScript (run directly by Node 26; type-checked by TypeScript 7.0) · Yjs 13.6 · y-protocols · `ws` · Node's built-in SQLite · Vite 8 · fast-check. Personal learning project, built pairing with Claude Code.
+
+## How it fits together
+
+```mermaid
+flowchart LR
+    subgraph A["browser: responder A"]
+        DA["Yjs doc<br/>(the whole incident)"] <--> IA[("IndexedDB copy")]
+    end
+    subgraph B["browser: responder B"]
+        DB["Yjs doc"] <--> IB[("IndexedDB copy")]
+    end
+    DA <-- "WebSocket: state vectors,<br/>then small updates" --> S["sync server<br/>(a peer that's always on)"]
+    DB <--> S
+    S --> L[("SQLite: update log,<br/>compacted")]
+```
+
+The server isn't the source of truth: any copy can be edited and merged with any other, in any order, and they all end up the same. That's the CRDT guarantee, and the property test checks it on 500 random histories.
+
+## Try it
+
+```bash
+npm install
+npm test                      # 16 tests, about 4 s
+npm run build && npm start    # then open http://127.0.0.1:8097/incident/inc-demo in two windows
+```
+
+Switch one window to "work offline", edit in both, switch back.
 
 ## Build log
 
@@ -67,3 +94,9 @@ Not handled, honestly:
 - **Reloading while the server is down fails**: the page itself comes from that server and there's no service worker, so the app shell isn't cached (the data is, in IndexedDB).
 - **Two tabs in one browser share one IndexedDB** copy but don't sync with each other directly; they sync through the server.
 - **No authentication**: anyone who can reach the server and guess an incident ID can read and write it.
+
+### Step 4: docs and CI
+
+This README, `LEARN.md`, and `.github/workflows/ci.yml` (type-check, tests, build). **The workflow has not run**: the project isn't published.
+
+Where it stands: 4 local commits, 16 tests passing, the app tried in two browser tabs. Not published.
