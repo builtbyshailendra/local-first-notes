@@ -1,0 +1,51 @@
+:root {
+  --bg: #f7f7f5; --panel: #ffffff; --ink: #1d1d1b; --muted: #6b6b66; --line: #deded8;
+  --accent: #2f5bd3; --ok: #1f7a46; --warn: #a15c00; --bad: #b3261e;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #161615; --panel: #1f1f1d; --ink: #ecece8; --muted: #a3a39c; --line: #34342f;
+          --accent: #8aa6ff; --ok: #5cc28a; --warn: #e0a24c; --bad: #ff8a80; color-scheme: dark; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.45 system-ui, sans-serif; }
+.bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 10px 16px;
+       border-bottom: 1px solid var(--line); background: var(--panel); }
+.brand { font-weight: 700; color: var(--ink); text-decoration: none; }
+.room { font-family: ui-monospace, monospace; color: var(--muted); }
+.status { padding: 2px 8px; border-radius: 999px; font-size: 13px; border: 1px solid currentColor; }
+.status[data-status="connected"] { color: var(--ok); }
+.status[data-status="connecting"] { color: var(--warn); }
+.status[data-status="offline"] { color: var(--bad); }
+.saved { font-size: 13px; color: var(--muted); }
+.switch, .me { font-size: 13px; color: var(--muted); }
+.people { display: flex; gap: 6px; list-style: none; margin: 0 0 0 auto; padding: 0; }
+.people li { padding: 2px 8px; border-radius: 999px; font-size: 13px; color: #fff; }
+main { padding: 16px; max-width: 1100px; margin: 0 auto; }
+.meta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 12px; }
+.title { flex: 1 1 320px; font-size: 20px; font-weight: 600; padding: 6px 8px; }
+input, select, textarea, button { font: inherit; color: inherit; background: var(--panel);
+  border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; }
+button { cursor: pointer; border-color: var(--accent); color: var(--accent); }
+textarea { width: 100%; resize: vertical; font-family: ui-monospace, monospace; font-size: 14px; }
+h2 { font-size: 14px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 18px 0 6px; }
+.cols { display: grid; grid-template-columns: 3fr 2fr; gap: 24px; }
+@media (max-width: 760px) { .cols { grid-template-columns: 1fr; } .people { margin-left: 0; } }
+.row { display: flex; gap: 8px; }
+.row input:first-child { flex: 1; min-width: 0; }
+.actions, .timeline { list-style: none; padding: 0; margin: 0; }
+.actions li { display: flex; gap: 8px; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--line); }
+.actions li .text { flex: 1; }
+.actions li.done .text { text-decoration: line-through; color: var(--muted); }
+.actions li .del { border-color: var(--line); color: var(--muted); }
+.timeline li { padding: 6px 0; border-bottom: 1px solid var(--line); }
+.timeline time { font-family: ui-monospace, monospace; color: var(--muted); margin-right: 8px; }
+.timeline .who { color: var(--accent); margin-right: 6px; }
+.home { max-width: 520px; margin: 40px auto; }
+.hint { text-align: center; color: var(--muted); }
+
+/* Grid and flex children default to min-width: auto, so fixed-size inputs
+   pushed the column wider than a phone screen. Let them shrink. */
+.col, .row > *, .actions li > * { min-width: 0; }
+.actions li input:not([type="checkbox"]), .row input[size] { width: 7em; flex: 0 1 7em; }
+.actions li .text { overflow-wrap: anywhere; }

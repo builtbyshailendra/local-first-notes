@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Incident notes</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="bar">
+    <a class="brand" href="/">incident notes</a>
+    <span id="room" class="room"></span>
+    <span id="status" class="status" data-status="offline">offline</span>
+    <label class="switch"><input type="checkbox" id="offline"> work offline</label>
+    <span id="saved" class="saved" title="A full copy of this incident is kept in this browser (IndexedDB)"></span>
+    <ul id="people" class="people" aria-label="who's here"></ul>
+    <label class="me">you are <input id="name" size="12" maxlength="24"></label>
+  </header>
+
+  <main id="app" hidden>
+    <section class="meta">
+      <input id="title" class="title" placeholder="What's happening?" maxlength="120" aria-label="title">
+      <label>severity <select id="severity"></select></label>
+      <label>status <select id="status-select"></select></label>
+    </section>
+
+    <section class="cols">
+      <div class="col">
+        <h2>Notes</h2>
+        <textarea id="notes" rows="14" placeholder="Shared notes. Everyone types here at once."></textarea>
+        <h2>Action items</h2>
+        <ul id="actions" class="actions"></ul>
+        <form id="add-action" class="row">
+          <input id="action-text" placeholder="New action" maxlength="200" required>
+          <input id="action-owner" placeholder="owner" size="10" maxlength="24">
+          <button>Add</button>
+        </form>
+      </div>
+      <div class="col">
+        <h2>Timeline</h2>
+        <form id="add-entry" class="row">
+          <input id="entry-text" placeholder="What just happened?" maxlength="300" required>
+          <button>Add</button>
+        </form>
+        <ol id="timeline" class="timeline"></ol>
+      </div>
+    </section>
+  </main>
+
+  <main id="home" hidden>
+    <form id="open" class="row home">
+      <label>Incident <input id="open-id" placeholder="inc-2026-11-18-checkout" pattern="[a-z0-9][a-z0-9-]{0,63}" required></label>
+      <button>Open</button>
+    </form>
+    <p class="hint">Open the same incident in two windows, switch one to "work offline", edit both, switch back.</p>
+  </main>
+
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>

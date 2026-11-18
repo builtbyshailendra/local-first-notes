@@ -41,3 +41,29 @@ What broke, in order:
 2. The first fix called `terminate()` in that handler, which cut off the 1009 close frame `ws` was already sending (the client saw 1006). The handler now does nothing more.
 3. **The test process never exited.** `y-protocols`' `Awareness` runs a repeating timer, and the client's `destroy()` didn't stop it: harmless in a browser tab, but it keeps any Node process alive forever. The client now destroys the awareness it created.
 4. Each test left its SQLite file in the temp folder (42 of them by then); the tests now remove them.
+
+### Step 3: the browser app, tried in two tabs
+
+`web/` (Vite 8, no framework): title, severity, status, shared notes, timeline, action items, who's here, a connection badge and a **work offline** switch. A full copy of each incident is kept in the browser's IndexedDB (`y-indexeddb`). The notes are a plain `<textarea>` kept in step with a `Y.Text`: local typing becomes the smallest delete + insert; remote changes move your caret by whatever arrived before it. Everything is built with DOM methods (`textContent`, not `innerHTML`), so nothing anyone types can become HTML. `npm run build && npm start` serves the app and the sync endpoint on one port.
+
+Tried in the Claude desktop app's browser with two tabs on one incident (each tab is a different responder):
+
+| Step | Seen |
+|---|---|
+| A types a title and notes | B shows both within a moment; both people appear in each tab's presence list |
+| B switches to **work offline**; B appends to the notes and adds an action; A prepends to the notes and sets SEV1 | each tab shows only its own changes; each sees only itself as present |
+| B goes back online | both tabs: `[A] Rolled back to v41. Payments API returning 500s since 10:40. [B, offline] DB failover finished 10:52.`, SEV1, the action item; two people present |
+| the **server is stopped**; A adds a timeline entry | A shows "offline" and keeps working |
+| the server is started again | B reconnects by itself and receives A's outage entry (B had no other way to get it) |
+| a timeline entry `<img src=x onerror=…>` from B | shown in A as text; no element created, script not run |
+| phone width (375 px) | everything fits (checked by measuring every element's right edge, not just page width) |
+
+What broke:
+1. TypeScript 7 caught two type errors Vite had built past (Vite doesn't type-check): a `style` string assigned to a style object, and a helper whose prop types were too complex to represent.
+2. A reload gave you a new random name: only names typed by hand were saved. Generated names are saved now.
+3. At phone width the action-item row and the add buttons were clipped: grid and flex children default to `min-width: auto`, so fixed-size inputs pushed their column wider than the screen.
+
+Not handled, honestly:
+- **Reloading while the server is down fails**: the page itself comes from that server and there's no service worker, so the app shell isn't cached (the data is, in IndexedDB).
+- **Two tabs in one browser share one IndexedDB** copy but don't sync with each other directly; they sync through the server.
+- **No authentication**: anyone who can reach the server and guess an incident ID can read and write it.
