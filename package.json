@@ -1,0 +1,30 @@
+{
+  "name": "local-first-notes",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Incident notes that work offline and merge without conflicts (Yjs CRDTs)",
+  "scripts": {
+    "test": "node --test --test-concurrency=1 test/",
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "start": "node src/server/main.ts"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "lib0": "^0.2.120",
+    "ws": "^8.23.0",
+    "y-indexeddb": "^9.0.12",
+    "y-protocols": "^1.0.7",
+    "yjs": "^13.6.33"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/ws": "^8.18.2",
+    "fast-check": "^4.10.3",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8"
+  }
+}
