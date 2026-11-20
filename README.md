@@ -1,5 +1,7 @@
 # local-first-notes
 
+[![ci](https://github.com/builtbyshailendra/local-first-notes/actions/workflows/ci.yml/badge.svg)](https://github.com/builtbyshailendra/local-first-notes/actions/workflows/ci.yml)
+
 Incident notes that keep working offline and merge everyone's edits without conflicts. Each incident is a [Yjs](https://yjs.dev) document, a set of CRDTs (conflict-free replicated data types): every responder's browser holds the whole incident, edits it without waiting for the network, and syncs whenever it can.
 
 TypeScript (run directly by Node 26; type-checked by TypeScript 7.0) · Yjs 13.6 · y-protocols · `ws` · Node's built-in SQLite · Vite 8 · fast-check. Personal learning project, built pairing with Claude Code.
@@ -97,6 +99,6 @@ Not handled, honestly:
 
 ### Step 4: docs and CI
 
-This README, `LEARN.md`, and `.github/workflows/ci.yml` (type-check, tests, build). **The workflow has not run**: the project isn't published.
+This README, `LEARN.md`, and `.github/workflows/ci.yml` (type-check, tests, build). It runs on every push (badge above).
 
-Where it stands: 4 local commits, 16 tests passing, the app tried in two browser tabs. Not published.
+Where it stands: 16 tests passing, locally and in CI; the app tried in two browser tabs. Published 20 Nov 2026.
